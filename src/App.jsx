@@ -11,26 +11,33 @@ const App = () => {
   useEffect(() => {
     if (window.localStorage.getItem("ToDoList")) {
       const toDoList = JSON.parse(window.localStorage.getItem("ToDoList"));
-      setTodoList(toDoList);
+      toDoList.length === 0 ? setTodoList(null) : setTodoList(toDoList);
     }
     return;
   }, []);
 
   const addToDo = (toDo) => {
+    const newTodo = {
+      task: toDo,
+      isDone: false,
+    };
+
     if (toDoList === null) {
-      window.localStorage.setItem("ToDoList", JSON.stringify([toDo]));
-      setTodoList([toDo]);
+      window.localStorage.setItem("ToDoList", JSON.stringify([newTodo]));
+      setTodoList([newTodo]);
       return;
     }
 
-    const updatedToDo = toDoList.concat(toDo);
+    const updatedToDo = toDoList.concat(newTodo);
 
     window.localStorage.setItem("ToDoList", JSON.stringify(updatedToDo));
     setTodoList(updatedToDo);
   };
 
   const deleteTodo = (toDoToBeDeleted) => {
-    const updatedToDo = toDoList.filter((toDo) => toDo !== toDoToBeDeleted);
+    const updatedToDo = toDoList.filter(
+      (toDo) => toDo.task !== toDoToBeDeleted
+    );
     window.localStorage.setItem("ToDoList", JSON.stringify(updatedToDo));
     if (updatedToDo.length === 0) {
       setTodoList(null);
@@ -76,9 +83,9 @@ const ToDoList = ({ toDoList, deleteTodo }) => {
       <>
         <ol>
           {toDoList.map((toDo) => (
-            <li key={toDo}>
-              {toDo}
-              <button onClick={() => deleteTodo(toDo)}>Delete</button>
+            <li key={toDo.task}>
+              {toDo.task}
+              <button onClick={() => deleteTodo(toDo.task)}>Delete</button>
             </li>
           ))}
         </ol>

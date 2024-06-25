@@ -4,7 +4,9 @@ import { useState } from "react";
 const App = () => {
   const [toDoList, setTodoList] = useState(null);
 
-  console.log(window.localStorage.getItem("ToDoList"));
+  // console.log(window.localStorage.getItem("ToDoList"));
+
+  // window.localStorage.clear();
 
   useEffect(() => {
     if (window.localStorage.getItem("ToDoList")) {
@@ -16,12 +18,15 @@ const App = () => {
 
   const addToDo = (toDo) => {
     if (toDoList === null) {
+      window.localStorage.setItem("ToDoList", JSON.stringify([toDo]));
       setTodoList([toDo]);
-      window.localStorage.setItem("ToDoList", JSON.stringify(toDoList));
       return;
     }
-    setTodoList(toDoList.concat(toDo));
-    window.localStorage.setItem("ToDoList", JSON.stringify(toDoList));
+
+    const updatedToDo = toDoList.concat(toDo);
+
+    window.localStorage.setItem("ToDoList", JSON.stringify(updatedToDo));
+    setTodoList(updatedToDo);
   };
 
   return (

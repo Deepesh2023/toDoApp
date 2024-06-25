@@ -29,11 +29,21 @@ const App = () => {
     setTodoList(updatedToDo);
   };
 
+  const deleteTodo = (toDoToBeDeleted) => {
+    const updatedToDo = toDoList.filter((toDo) => toDo !== toDoToBeDeleted);
+    window.localStorage.setItem("ToDoList", JSON.stringify(updatedToDo));
+    if (updatedToDo.length === 0) {
+      setTodoList(null);
+      return;
+    }
+    setTodoList(updatedToDo);
+  };
+
   return (
     <>
       <h1>ToDo App</h1>
       <NewToDoForm addToDo={addToDo} />
-      <ToDoList toDoList={toDoList} />
+      <ToDoList toDoList={toDoList} deleteTodo={deleteTodo} />
     </>
   );
 };
@@ -60,13 +70,16 @@ const NewToDoForm = ({ addToDo }) => {
   );
 };
 
-const ToDoList = ({ toDoList }) => {
+const ToDoList = ({ toDoList, deleteTodo }) => {
   if (toDoList) {
     return (
       <>
         <ol>
           {toDoList.map((toDo) => (
-            <li key={toDo}>{toDo}</li>
+            <li key={toDo}>
+              {toDo}
+              <button onClick={() => deleteTodo(toDo)}>Delete</button>
+            </li>
           ))}
         </ol>
       </>

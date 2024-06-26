@@ -34,6 +34,20 @@ const App = () => {
     setTodoList(updatedToDo);
   };
 
+  const changeStatus = (toDoToBeUpdated) => {
+    const updatedToDo = {
+      ...toDoToBeUpdated,
+      isDone: !toDoToBeUpdated.isDone,
+    };
+
+    const updatedToDoList = toDoList.map((toDo) =>
+      toDo.task === toDoToBeUpdated.task ? updatedToDo : toDo
+    );
+
+    window.localStorage.setItem("ToDoList", JSON.stringify(updatedToDoList));
+    setTodoList(updatedToDoList);
+  };
+
   const deleteTodo = (toDoToBeDeleted) => {
     const updatedToDo = toDoList.filter(
       (toDo) => toDo.task !== toDoToBeDeleted
@@ -50,7 +64,11 @@ const App = () => {
     <>
       <h1>ToDo App</h1>
       <NewToDoForm addToDo={addToDo} />
-      <ToDoList toDoList={toDoList} deleteTodo={deleteTodo} />
+      <ToDo
+        toDoList={toDoList}
+        deleteTodo={deleteTodo}
+        changeStatus={changeStatus}
+      />
     </>
   );
 };
@@ -77,25 +95,38 @@ const NewToDoForm = ({ addToDo }) => {
   );
 };
 
-const ToDoList = ({ toDoList, deleteTodo }) => {
+const ToDo = ({ toDoList, deleteTodo, changeStatus }) => {
   if (toDoList) {
     return (
-      <>
-        <ol>
-          {toDoList.map((toDo) => (
-            <li key={toDo.task}>
-              {toDo.task}
-              <button onClick={() => deleteTodo(toDo.task)}>Delete</button>
-            </li>
-          ))}
-        </ol>
-      </>
+      <div>
+        <List
+          list={toDoList.filter((toDo) => toDo.isDone === false)}
+          deleteTodo={deleteTodo}
+          changeStatus={changeStatus}
+        />
+
+        <List
+          list={toDoList.filter((toDo) => toDo.isDone === true)}
+          deleteTodo={deleteTodo}
+          changeStatus={changeStatus}
+        />
+      </div>
     );
   }
+  return null;
+};
 
+const List = ({ list, deleteTodo, changeStatus }) => {
   return (
     <>
-      <h2>No tasks</h2> <p>add task to get things done</p>
+      <ol>
+        {list.map((toDo) => (
+          <li key={toDo.task}>
+            <span onClick={() => changeStatus(toDo)}>{toDo.task}</span>
+            <button onClick={() => deleteTodo(toDo.task)}>Delete</button>
+          </li>
+        ))}
+      </ol>
     </>
   );
 };

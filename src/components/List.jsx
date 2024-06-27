@@ -4,7 +4,7 @@ const List = ({ list, deleteTodo, changeStatus }) => {
       <ol>
         {list.map((toDo) => (
           <li key={toDo.task}>
-            <span onClick={() => changeStatus(toDo)}>{toDo.task}</span>
+            <span className="text-3xl" onClick={() => changeStatus(toDo)}>{toDo.task}</span>
             <button onClick={() => deleteTodo(toDo.task)}>Delete</button>
           </li>
         ))}

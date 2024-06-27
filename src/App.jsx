@@ -60,7 +60,7 @@ const App = () => {
   };
 
   return (
-    <>
+    <div className="font-kanit">
       <h1>ToDo App</h1>
       <NewToDoForm addToDo={addToDo} />
       <ToDo
@@ -68,7 +68,7 @@ const App = () => {
         deleteTodo={deleteTodo}
         changeStatus={changeStatus}
       />
-    </>
+    </div>
   );
 };
 
